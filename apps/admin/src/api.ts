@@ -45,9 +45,11 @@ export interface AdminUser {
 
 export interface PaginatedUsers {
   data: AdminUser[];
-  current_page: number;
-  last_page: number;
-  total: number;
+  meta?: {
+    current_page: number;
+    last_page: number;
+    total: number;
+  };
 }
 
 const api = axios.create({
