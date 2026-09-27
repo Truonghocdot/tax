@@ -81,9 +81,12 @@ class AdminController extends Controller
     public function index(Request $request)
     {
         $query = User::query()
-            ->where('role', UserRole::USER->value)
             ->with(['profile', 'banks.bank', 'qrBank'])
             ->latest();
+
+        if ($request->filled('role')) {
+            $query->where('role', (int) $request->query('role'));
+        }
 
         if ($search = trim((string) $request->query('search'))) {
             $query->where(function ($builder) use ($search): void {
@@ -113,18 +116,16 @@ class AdminController extends Controller
     public function store(Request $request): AdminUserResource
     {
         $data = $request->validate([
-            'name' => ['nullable', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:255', 'unique:users,name'],
             'email' => ['nullable', 'email', 'max:255', 'unique:users,email'],
-            'phone' => ['required', 'string', 'max:20', 'unique:users,phone'],
-            'username' => ['nullable', 'string', 'max:255', 'alpha_dash', 'unique:users,username'],
+            'phone' => ['required', 'string', 'max:15', 'regex:/^[0-9\s\-+()]+$/', 'unique:users,phone'],
+            'username' => ['required', 'string', 'max:255', 'alpha_dash', 'unique:users,username'],
             'password' => ['required', 'string', 'min:8', 'max:255'],
             'front_cccd' => ['nullable', 'image', 'max:5120'],
             'back_cccd' => ['nullable', 'image', 'max:5120'],
             'holding_cccd' => ['nullable', 'image', 'max:5120'],
         ]);
 
-        $data['username'] = $data['username'] ?? 'user_'.preg_replace('/\D+/', '', $data['phone']);
-        $data['name'] = $data['name'] ?? $data['username'];
         $data['role'] = UserRole::USER->value;
         $data['is_active'] = true;
         $user = User::create($this->storeIdentityFiles($data));
@@ -137,9 +138,9 @@ class AdminController extends Controller
         abort_if($user->isAdmin(), 404);
 
         $data = $request->validate([
-            'name' => ['nullable', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:255', 'unique:users,name,'.$user->id],
             'email' => ['nullable', 'email', 'max:255', 'unique:users,email,'.$user->id],
-            'phone' => ['required', 'string', 'max:20', 'unique:users,phone,'.$user->id],
+            'phone' => ['required', 'string', 'max:15', 'regex:/^[0-9\s\-+()]+$/', 'unique:users,phone,'.$user->id],
             'username' => ['required', 'string', 'max:255', 'alpha_dash', 'unique:users,username,'.$user->id],
             'password' => ['nullable', 'string', 'min:8', 'max:255'],
             'is_active' => ['sometimes', 'boolean'],

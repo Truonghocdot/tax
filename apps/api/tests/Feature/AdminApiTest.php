@@ -2,6 +2,7 @@
 
 use App\Constants\UserRole;
 use App\Models\User;
+use App\Models\Bank;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
 
@@ -67,6 +68,62 @@ test('admin can approve a pending user', function () {
         ->assertJsonPath('data.is_active', true);
 
     expect($user->refresh()->is_active)->toBeTrue();
+});
+
+test('admin users table includes admin and client roles while bulk delete only targets clients', function () {
+    $admin = createAdmin();
+    User::factory()->create([
+        'name' => 'Client One',
+        'username' => 'client-one',
+        'phone' => '0900000010',
+        'role' => UserRole::USER->value,
+        'is_active' => true,
+    ]);
+
+    $response = $this->actingAs($admin, 'sanctum')->getJson('/api/admin/users');
+
+    $response->assertOk()
+        ->assertJsonPath('meta.total', 2)
+        ->assertJsonFragment(['username' => 'admin-test', 'role' => UserRole::ADMIN->value])
+        ->assertJsonFragment(['username' => 'client-one', 'role' => UserRole::USER->value]);
+});
+
+test('admin can create and update a client using the form contract', function () {
+    $admin = createAdmin();
+
+    $create = $this->actingAs($admin, 'sanctum')->postJson('/api/admin/users', [
+        'name' => 'Created Client',
+        'email' => 'created@example.com',
+        'phone' => '0900000011',
+        'username' => 'created-client',
+        'password' => 'Password123',
+    ])->assertCreated();
+
+    $userId = $create->json('data.id');
+    $this->actingAs($admin, 'sanctum')->postJson("/api/admin/users/{$userId}", [
+        '_method' => 'PATCH',
+        'name' => 'Updated Client',
+        'email' => 'created@example.com',
+        'phone' => '0900000011',
+        'username' => 'created-client',
+    ])->assertOk()->assertJsonPath('data.name', 'Updated Client');
+});
+
+test('qr bank update validates a real bank bin and persists all qr fields', function () {
+    $admin = createAdmin();
+    $user = User::factory()->create(['role' => UserRole::USER->value, 'is_active' => true]);
+    Bank::create(['name' => 'Test Bank', 'code' => 'TB', 'bin' => '970400', 'short_name' => 'TB']);
+
+    $this->actingAs($admin, 'sanctum')
+        ->putJson("/api/admin/users/{$user->id}/qr-bank", [
+            'bin_bank' => '970400',
+            'number_account' => '123456789',
+            'amount' => 100000,
+            'account_name' => 'TEST CLIENT',
+            'description' => 'Nop thue',
+            'tax_id' => '0101234567',
+            'company_name' => 'Test Company',
+        ])->assertOk()->assertJsonPath('data.qr_bank.company_name', 'Test Company');
 });
 
 test('admin cannot delete an admin account', function () {

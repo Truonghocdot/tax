@@ -30,7 +30,7 @@ Route::prefix('admin')->middleware(['auth:sanctum', 'admin'])->group(function ()
     Route::post('/users', [AdminController::class, 'store']);
     Route::post('/users/bulk-delete', [AdminController::class, 'bulkDestroy']);
     Route::get('/users/{user}', [AdminController::class, 'show']);
-    Route::patch('/users/{user}', [AdminController::class, 'update']);
+    Route::match(['post', 'patch'], '/users/{user}', [AdminController::class, 'update']);
     Route::delete('/users/{user}', [AdminController::class, 'destroy']);
     Route::post('/users/{user}/approve', [AdminController::class, 'approve']);
     Route::put('/users/{user}/qr-bank', [AdminController::class, 'updateQrBank']);

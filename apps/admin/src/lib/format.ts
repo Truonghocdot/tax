@@ -26,3 +26,7 @@ export function emptyUserForm() {
     password: generatePassword(),
   };
 }
+
+export function usernameFromPhone(phone: string): string {
+  return `user_${phone.replace(/\D/g, "")}`;
+}

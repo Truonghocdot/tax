@@ -86,6 +86,7 @@ export const adminApi = {
   login: (payload: { identifier: string; password: string }) =>
     api.post<AdminLoginResponse>("/admin/login", payload),
   me: () => api.get<{ data: AdminUser }>("/admin/me"),
+  banks: () => api.get<Bank[]>("/banks"),
   stats: () => api.get<{ data: Record<string, number> }>("/admin/stats"),
   users: (params: { search?: string; status?: string; page?: number }) =>
     api.get<PaginatedUsers>("/admin/users", { params }),
