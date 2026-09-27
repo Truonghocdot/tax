@@ -10,24 +10,35 @@ import type { View } from "./types";
 export default function App() {
   const [authenticated, setAuthenticated] = useState(Boolean(localStorage.getItem("admin_token")));
   const [user, setUser] = useState<AdminUser | null>(null);
+  const [authChecking, setAuthChecking] = useState(Boolean(localStorage.getItem("admin_token")));
 
   useEffect(() => {
     if (!authenticated) {
       setUser(null);
+      setAuthChecking(false);
       return;
     }
 
+    setAuthChecking(true);
     adminApi.me()
       .then((response) => setUser(response.data.data))
       .catch(() => {
         localStorage.removeItem("admin_token");
         setAuthenticated(false);
+        setUser(null);
+      })
+      .finally(() => {
+        setAuthChecking(false);
       });
   }, [authenticated]);
 
   return <BrowserRouter>
-    {!authenticated || !user ? <LoginPage onLogin={() => setAuthenticated(true)} /> : <ProtectedAdmin user={user} onLogout={() => { localStorage.removeItem("admin_token"); setAuthenticated(false); }} />}
+    {!authenticated ? <LoginPage onLogin={(loggedInUser) => { setUser(loggedInUser); setAuthenticated(true); }} /> : authChecking && !user ? <SessionLoading /> : user ? <ProtectedAdmin user={user} onLogout={() => { localStorage.removeItem("admin_token"); setUser(null); setAuthenticated(false); }} /> : <SessionLoading />}
   </BrowserRouter>;
+}
+
+function SessionLoading() {
+  return <main className="session-loading"><div className="loading-spinner" /><p>Đang khôi phục phiên quản trị...</p></main>;
 }
 
 function ProtectedAdmin({ user, onLogout }: { user: AdminUser; onLogout: () => void }) {

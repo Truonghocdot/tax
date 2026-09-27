@@ -1,9 +1,9 @@
 import { useState, type FormEvent } from "react";
 import { ArrowRight, ShieldCheck } from "lucide-react";
-import { adminApi } from "../api";
+import { adminApi, type AdminUser } from "../api";
 import { getErrorMessage } from "../lib/errors";
 
-export default function LoginPage({ onLogin }: { onLogin: () => void }) {
+export default function LoginPage({ onLogin }: { onLogin: (user: AdminUser) => void }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -16,7 +16,7 @@ export default function LoginPage({ onLogin }: { onLogin: () => void }) {
     try {
       const response = await adminApi.login({ username, password });
       localStorage.setItem("admin_token", response.data.data.token);
-      onLogin();
+      onLogin(response.data.data.user);
     } catch (requestError) {
       setError(getErrorMessage(requestError));
     } finally {

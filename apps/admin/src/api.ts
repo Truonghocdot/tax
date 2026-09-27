@@ -52,6 +52,15 @@ export interface PaginatedUsers {
   };
 }
 
+export interface AdminLoginResponse {
+  status: boolean;
+  message: string;
+  data: {
+    token: string;
+    user: AdminUser;
+  };
+}
+
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL || "http://127.0.0.1:8000/api",
   headers: { Accept: "application/json" },
@@ -68,7 +77,6 @@ api.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       localStorage.removeItem("admin_token");
-      window.location.reload();
     }
     return Promise.reject(error);
   },
@@ -76,7 +84,7 @@ api.interceptors.response.use(
 
 export const adminApi = {
   login: (payload: { username: string; password: string }) =>
-    api.post("/admin/login", payload),
+    api.post<AdminLoginResponse>("/admin/login", payload),
   me: () => api.get<{ data: AdminUser }>("/admin/me"),
   stats: () => api.get<{ data: Record<string, number> }>("/admin/stats"),
   users: (params: { search?: string; status?: string; page?: number }) =>
