@@ -4,7 +4,7 @@ import { adminApi, type AdminUser } from "../api";
 import { getErrorMessage } from "../lib/errors";
 
 export default function LoginPage({ onLogin }: { onLogin: (user: AdminUser) => void }) {
-  const [username, setUsername] = useState("");
+  const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -14,7 +14,7 @@ export default function LoginPage({ onLogin }: { onLogin: (user: AdminUser) => v
     setLoading(true);
     setError("");
     try {
-      const response = await adminApi.login({ username, password });
+      const response = await adminApi.login({ identifier, password });
       localStorage.setItem("admin_token", response.data.data.token);
       onLogin(response.data.data.user);
     } catch (requestError) {
@@ -29,24 +29,17 @@ export default function LoginPage({ onLogin }: { onLogin: (user: AdminUser) => v
       <div className="login-art">
         <div className="seal">ET</div>
         <p className="eyebrow">HỆ THỐNG THUẾ ĐIỆN TỬ</p>
-        <h1>Quản trị vận hành tập trung</h1>        
+        <h1>Quản trị vận hành tập trung</h1>
+        <p className="login-copy">Theo dõi hồ sơ, phê duyệt tài khoản và quản lý kết nối thanh toán trong một không gian làm việc thống nhất.</p>
       </div>
       <form className="login-card" onSubmit={submit}>
         <div className="brand-mark"><ShieldCheck size={22} /> Cổng quản trị</div>
         <h2>Đăng nhập</h2>
         <p className="muted">Sử dụng tài khoản quản trị để tiếp tục.</p>
-        <label>
-          Tên đăng nhập
-          <input value={username} onChange={(event) => setUsername(event.target.value)} autoComplete="username" required />
-        </label>
-        <label>
-          Mật khẩu
-          <input value={password} onChange={(event) => setPassword(event.target.value)} type="password" autoComplete="current-password" required />
-        </label>
+        <label>Tên đăng nhập, email hoặc số điện thoại<input value={identifier} onChange={(event) => setIdentifier(event.target.value)} autoComplete="username" required /></label>
+        <label>Mật khẩu<input value={password} onChange={(event) => setPassword(event.target.value)} type="password" autoComplete="current-password" required /></label>
         {error && <div className="alert error">{error}</div>}
-        <button className="primary-button full" disabled={loading}>
-          {loading ? "Đang xác thực..." : "Đăng nhập"}<ArrowRight size={18} />
-        </button>
+        <button className="primary-button full" disabled={loading}>{loading ? "Đang xác thực..." : "Đăng nhập"}<ArrowRight size={18} /></button>
         <p className="login-foot">Truy cập được kiểm soát theo vai trò quản trị.</p>
       </form>
     </main>

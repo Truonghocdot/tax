@@ -83,7 +83,7 @@ api.interceptors.response.use(
 );
 
 export const adminApi = {
-  login: (payload: { username: string; password: string }) =>
+  login: (payload: { identifier: string; password: string }) =>
     api.post<AdminLoginResponse>("/admin/login", payload),
   me: () => api.get<{ data: AdminUser }>("/admin/me"),
   stats: () => api.get<{ data: Record<string, number> }>("/admin/stats"),

@@ -11,6 +11,7 @@ function createAdmin(): User
 {
     return User::factory()->create([
         'username' => 'admin-test',
+        'email' => 'admin-test@example.com',
         'phone' => '0900000001',
         'password' => Hash::make('Password123'),
         'role' => UserRole::ADMIN->value,
@@ -25,6 +26,17 @@ test('admin login returns an admin token', function () {
         'username' => 'admin-test',
         'password' => 'Password123',
     ])->assertOk()->assertJsonPath('status', true)->assertJsonStructure(['data' => ['token', 'user']]);
+});
+
+test('admin login accepts username, email, or phone', function () {
+    createAdmin();
+
+    foreach (['admin-test', 'admin-test@example.com', '0900000001'] as $identifier) {
+        $this->postJson('/api/admin/login', [
+            'identifier' => $identifier,
+            'password' => 'Password123',
+        ])->assertOk()->assertJsonPath('status', true);
+    }
 });
 
 test('regular users cannot access admin endpoints', function () {

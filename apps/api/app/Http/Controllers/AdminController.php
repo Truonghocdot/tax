@@ -16,11 +16,18 @@ class AdminController extends Controller
     public function login(Request $request): JsonResponse
     {
         $data = $request->validate([
-            'username' => ['required', 'string'],
+            'identifier' => ['nullable', 'string', 'required_without:username'],
+            // Keep username for clients built against the first Admin API contract.
+            'username' => ['nullable', 'string', 'required_without:identifier'],
             'password' => ['required', 'string'],
         ]);
 
-        $user = User::where('username', $data['username'])->first();
+        $identifier = trim((string) ($data['identifier'] ?? $data['username']));
+        $user = User::where(function ($query) use ($identifier): void {
+            $query->where('username', $identifier)
+                ->orWhere('email', $identifier)
+                ->orWhere('phone', $identifier);
+        })->first();
 
         if (! $user || ! Hash::check($data['password'], $user->password)) {
             return response()->json([
