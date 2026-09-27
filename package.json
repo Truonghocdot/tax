@@ -1,0 +1,13 @@
+{
+  "name": "tax-platform",
+  "private": true,
+  "workspaces": ["apps/client", "apps/admin"],
+  "scripts": {
+    "dev:client": "npm --workspace apps/client run dev",
+    "dev:admin": "npm --workspace apps/admin run dev",
+    "build:client": "npm --workspace apps/client run build",
+    "build:admin": "npm --workspace apps/admin run build",
+    "test:client": "npm --workspace apps/client run test",
+    "api": "composer --working-dir=apps/api run dev"
+  }
+}

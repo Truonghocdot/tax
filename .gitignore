@@ -1,0 +1,24 @@
+# Laravel
+apps/api/.env
+apps/client/.env
+apps/admin/.env
+apps/api/vendor/
+apps/api/node_modules/
+apps/api/storage/app/public/
+apps/api/storage/framework/cache/
+apps/api/storage/framework/sessions/
+apps/api/storage/framework/testing/
+apps/api/storage/framework/views/
+apps/api/storage/logs/*.log
+
+# Frontend
+node_modules/
+apps/*/node_modules/
+apps/*/dist/
+apps/*/.env.local
+
+# Local tooling
+.idea/
+.vscode/
+*.log
+*.tsbuildinfo
