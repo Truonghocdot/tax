@@ -1,66 +1,44 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  Bell,
-  Building2,
-  Check,
-  ClipboardList,
-  Compass,
-  CreditCard,
-  FileCheck2,
-  FilePlus2,
-  FileText,
-  Fingerprint,
-  Settings,
-  Headphones,
-  Link2,
-  LockKeyhole,
-  Menu,
-  ScanSearch,
-  Shield,
-  Smartphone,
-  UserCheck,
-  UserRound,
-  UsersRound,
-} from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { authApi } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
 import MenuSidebar from "@/components/MenuSidebar";
+import sourceLogo from "@/assets/source/source-logo.png";
 import "@/styles/legacy-clone.css";
 
 interface FeatureItem {
-  icon: React.ElementType;
+  icon: string;
   label: string;
   path?: string;
 }
 
 const quickActions: FeatureItem[] = [
-  { icon: FileText, label: "Cập nhật hồ sơ", path: "/profile" },
-  { icon: FileCheck2, label: "Xác thực CCCD", path: "/identification" },
-  { icon: UsersRound, label: "Mã định danh", path: "/qr" },
-  { icon: Link2, label: "Liên kết tài khoản", path: "/link-account" },
+  { icon: "fa-solid fa-pen-to-square", label: "Cập nhật hồ sơ", path: "/profile" },
+  { icon: "fa-solid fa-file-invoice", label: "Xác thực CCCD", path: "/identification" },
+  { icon: "fa-solid fa-users-rectangle", label: "Mã định danh", path: "/qr" },
+  { icon: "fa-solid fa-link", label: "Liên kết tài khoản", path: "/link-account" },
 ];
 
 const services: FeatureItem[] = [
-  { icon: FilePlus2, label: "Đăng ký thuế", path: "/tax-registration" },
-  { icon: FileCheck2, label: "Hỗ trợ quyết toán thuế TNCN" },
-  { icon: ScanSearch, label: "Tra cứu hồ sơ khai thuế", path: "/tax-lookup" },
-  { icon: UsersRound, label: "Nhóm chức năng nộp thuế", path: "/tax-payment" },
-  { icon: Building2, label: "Đăng ký tài khoản doanh nghiệp trực tuyến", path: "/link-account" },
-  { icon: Bell, label: "Tra cứu thông báo", path: "/notifications" },
-  { icon: Smartphone, label: "Tiện ích" },
-  { icon: Headphones, label: "Hỗ trợ" },
-  { icon: Settings, label: "Thiết lập cá nhân", path: "/profile" },
-  { icon: LockKeyhole, label: "Đổi mật khẩu" },
-  { icon: Fingerprint, label: "Đăng nhập bằng vân tay" },
-  { icon: Compass, label: "Khám phá" },
-  { icon: Check, label: "Định danh", path: "/identification" },
-  { icon: CreditCard, label: "Giấy tờ" },
-  { icon: ClipboardList, label: "Tích hợp thông tin" },
-  { icon: UserCheck, label: "Người phụ thuộc" },
-  { icon: UserRound, label: "Cá nhân", path: "/profile" },
-  { icon: Shield, label: "Bảo hiểm xã hội" },
+  { icon: "fa-solid fa-file-circle-plus", label: "Đăng ký thuế", path: "/tax-registration" },
+  { icon: "fa-solid fa-file-circle-check", label: "Hỗ trợ quyết toán thuế TNCN" },
+  { icon: "fa-solid fa-magnifying-glass", label: "Tra cứu hồ sơ khai thuế", path: "/tax-lookup" },
+  { icon: "fa-solid fa-user-group", label: "Nhóm chức năng nộp thuế", path: "/tax-payment" },
+  { icon: "fa-solid fa-building-columns", label: "Đăng ký tài khoản doanh nghiệp trực tuyến", path: "/link-account" },
+  { icon: "fa-solid fa-bell", label: "Tra cứu thông báo", path: "/notifications" },
+  { icon: "fa-solid fa-mobile-retro", label: "Tiện ích" },
+  { icon: "fa-solid fa-clipboard-question", label: "Hỗ trợ" },
+  { icon: "fa-solid fa-gears", label: "Thiết lập cá nhân", path: "/profile" },
+  { icon: "fa-solid fa-lock", label: "Đổi mật khẩu" },
+  { icon: "fa-solid fa-fingerprint", label: "Đăng nhập bằng vân tay" },
+  { icon: "fa-solid fa-compass", label: "Khám phá" },
+  { icon: "fa-solid fa-check", label: "Định danh", path: "/identification" },
+  { icon: "fa-solid fa-credit-card", label: "Giấy tờ" },
+  { icon: "fa-regular fa-file", label: "Tích hợp thông tin" },
+  { icon: "fa-solid fa-user-check", label: "Người phụ thuộc" },
+  { icon: "fa-solid fa-user", label: "Cá nhân", path: "/profile" },
+  { icon: "fa-solid fa-shield", label: "Bảo hiểm xã hội" },
 ];
 
 const Dashboard = () => {
@@ -86,16 +64,16 @@ const Dashboard = () => {
   return (
     <main className="legacy-home-page">
       <header className="legacy-home-header">
-        <button type="button" onClick={() => setMenuOpen(true)} aria-label="Mở menu"><Menu size={25} /></button>
-        <img src="/logo.png" alt="Thuế điện tử" />
+        <button type="button" onClick={() => setMenuOpen(true)} aria-label="Mở menu"><i className="fa-solid fa-bars" /></button>
+        <img src={sourceLogo} alt="Thuế điện tử" />
         <div className="legacy-home-header-actions">
-          <button type="button" onClick={() => navigate("/qr")} aria-label="Mã QR"><ScanSearch size={22} /></button>
-          <button type="button" onClick={() => navigate("/notifications")} aria-label="Thông báo"><Bell size={22} /></button>
+          <button type="button" onClick={() => navigate("/qr")} aria-label="Mã QR"><i className="fa-solid fa-qrcode" /></button>
+          <button type="button" onClick={() => navigate("/notifications")} aria-label="Thông báo"><i className="fa-solid fa-bell" /></button>
         </div>
       </header>
 
       <section className="legacy-user-card">
-        <div className="legacy-user-avatar"><UserRound size={31} /></div>
+        <div className="legacy-user-avatar"><i className="fa-solid fa-user" /></div>
         <div className="legacy-user-copy">
           <p>Mã số thuế: <strong>{profile.tax_code || "Chưa có MST"}</strong></p>
           <p>Doanh nghiệp: <strong>{profile.bussiness_name || profile.business_name || "Đang cập nhật dữ liệu..."}</strong></p>
@@ -107,8 +85,7 @@ const Dashboard = () => {
         <h2 className="legacy-section-title">Chức năng hay dùng</h2>
         <div className="legacy-quick-grid">
           {quickActions.map((item) => {
-            const Icon = item.icon;
-            return <button type="button" className="legacy-quick-item" key={item.label} onClick={() => openItem(item)}><span className="legacy-feature-icon"><Icon size={21} /></span><span>{item.label}</span></button>;
+            return <button type="button" className="legacy-quick-item" key={item.label} onClick={() => openItem(item)}><span className="legacy-feature-icon"><i className={item.icon} /></span><span>{item.label}</span></button>;
           })}
         </div>
       </section>
@@ -117,8 +94,7 @@ const Dashboard = () => {
         <h2 className="legacy-section-title">Danh sách nhóm dịch vụ</h2>
         <div className="legacy-service-grid">
           {services.map((item) => {
-            const Icon = item.icon;
-            return <button type="button" className="legacy-service-item" key={item.label} onClick={() => openItem(item)}><span className="legacy-service-icon"><Icon size={21} /></span><span>{item.label}</span></button>;
+            return <button type="button" className="legacy-service-item" key={item.label} onClick={() => openItem(item)}><span className="legacy-service-icon"><i className={item.icon} /></span><span>{item.label}</span></button>;
           })}
         </div>
       </section>

@@ -1,7 +1,7 @@
 import { Outlet } from "react-router-dom";
 import AuthBottomNav from "@/components/AuthBottomNav";
-import taxEmblem from "@/assets/thuedinetu.png";
-import backgroundImage from "@/assets/background.png";
+import taxEmblem from "@/assets/source/source-thuedinetu.png";
+import backgroundImage from "@/assets/source/source-background.png";
 import "@/styles/legacy-clone.css";
 
 const AuthLayout = () => (

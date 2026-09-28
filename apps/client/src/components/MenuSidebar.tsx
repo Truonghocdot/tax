@@ -10,7 +10,7 @@ import {
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
-import backLogo from "@/assets/backlogo.png";
+import backLogo from "@/assets/source/source-backlogo.png";
 import ChangePasswordModal from "./ChangePasswordModal";
 
 import { authApi } from "@/lib/api";

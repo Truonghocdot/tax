@@ -1,5 +1,4 @@
 import { useState, type FormEvent } from "react";
-import { Eye, EyeOff, LockKeyhole, ScanFace, ShieldCheck, UserRound } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
@@ -7,6 +6,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { authApi } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
+import faceIdAsset from "@/assets/source/source-faceid.png";
+import digitalIdentityAsset from "@/assets/source/source-digital-identity.png";
 
 const loginSchema = z.object({
   username: z.string().min(1, "Vui lòng nhập tên đăng nhập"),
@@ -62,16 +63,16 @@ const Login = () => {
 
       <form className="legacy-login-form" onSubmit={submit}>
         <label className="legacy-info-field">
-          <UserRound size={18} aria-hidden="true" />
+          <i className="fa-solid fa-user" aria-hidden="true" />
           <input {...form.register("username")} placeholder="Tên đăng nhập" autoComplete="username" />
         </label>
         {form.formState.errors.username && <p className="legacy-form-error">{form.formState.errors.username.message}</p>}
 
         <label className="legacy-info-field">
-          <LockKeyhole size={18} aria-hidden="true" />
+          <i className="fa-solid fa-lock" aria-hidden="true" />
           <input {...form.register("password")} type={showPassword ? "text" : "password"} placeholder="MST + Mật khẩu" autoComplete="current-password" />
           <button type="button" className="legacy-toggle" onClick={() => setShowPassword((visible) => !visible)} aria-label={showPassword ? "Ẩn mật khẩu" : "Hiện mật khẩu"}>
-            {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+            <i className={`fa-solid ${showPassword ? "fa-eye-slash" : "fa-eye"}`} aria-hidden="true" />
           </button>
         </label>
         {form.formState.errors.password && <p className="legacy-form-error">{form.formState.errors.password.message}</p>}
@@ -86,14 +87,14 @@ const Login = () => {
             {loginMutation.isPending ? "Đang đăng nhập..." : "Đăng nhập"}
           </button>
           <button type="button" className="legacy-face-button" aria-label="Đăng nhập bằng khuôn mặt">
-            <ScanFace size={24} />
+            <img src={faceIdAsset} alt="" />
           </button>
         </div>
       </form>
 
       <button type="button" className="legacy-digital-login">
         <span>Đăng nhập bằng tài khoản<br />Định danh điện tử</span>
-        <span className="legacy-digital-icon"><ShieldCheck size={27} /></span>
+        <img className="legacy-digital-icon" src={digitalIdentityAsset} alt="Định danh điện tử" />
       </button>
     </section>
   );
