@@ -22,6 +22,8 @@ const pageConfigs: Record<string, PageConfig> = {
     showMenu: true,
     variant: "transparent",
     hideHeader: true, // Dashboard has custom header
+    hideMenu: true,
+    fullScreen: true,
   },
   "/tax-payment": {
     title: "Nộp thuế",

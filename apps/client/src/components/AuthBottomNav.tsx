@@ -1,37 +1,21 @@
-import { QrCode, Wrench, Headphones, Share2 } from "lucide-react";
+import { Headphones, QrCode, Share2, Wrench } from "lucide-react";
 
-interface NavItem {
-  icon: React.ElementType;
-  label: string;
-  action?: () => void;
-}
-
-const navItems: NavItem[] = [
+const navItems = [
   { icon: QrCode, label: "QR tem" },
   { icon: Wrench, label: "Tiện ích" },
   { icon: Headphones, label: "Hỗ trợ" },
   { icon: Share2, label: "Chia sẻ" },
 ];
 
-const AuthBottomNav = () => {
-  return (
-    <nav className="relative bottom-0 pb-4 left-0 right-0 z-30 max-w-md mx-auto">
-      <div className="flex justify-around items-center py-3 px-4">
-        {navItems.map((item, index) => {
-          const Icon = item.icon;
-          return (
-            <button
-              key={index}
-              className="flex flex-col items-center gap-1 p-2 text-white hover:text-red-500 hover:scale-125"
-            >
-              <Icon size={38} />
-              <span className="text-base font-medium">{item.label}</span>
-            </button>
-          );
-        })}
-      </div>
-    </nav>
-  );
-};
+const AuthBottomNav = () => (
+  <nav className="legacy-auth-bottom" aria-label="Tiện ích nhanh">
+    {navItems.map(({ icon: Icon, label }) => (
+      <button type="button" key={label} className="legacy-auth-bottom-item">
+        <Icon size={29} strokeWidth={2.2} />
+        <span>{label}</span>
+      </button>
+    ))}
+  </nav>
+);
 
 export default AuthBottomNav;

@@ -68,6 +68,8 @@ interface BankData {
 
 export const authApi = {
   login: (data: unknown) => api.post("/login", data),
+  demoLogin: (data: { username: string; password: string }) =>
+    api.post("/demo/login", data),
   register: (data: RegisterData) =>
     api.post("/register", {
       username: data.fullName,

@@ -32,6 +32,8 @@ npm run dev:admin   # http://localhost:8081
 
 Đặt `VITE_API_URL=http://127.0.0.1:8000/api` trong file `.env.local` của từng frontend nếu API không chạy ở địa chỉ mặc định.
 
+Chế độ demo của client cho phép nhập bất kỳ username/password để tạo hoặc cập nhật một tài khoản người dùng local. Chỉ bật đồng thời `VITE_DEMO_LOGIN=true` ở client và `DEMO_LOGIN_ENABLED=true` ở API trong môi trường phát triển; endpoint này luôn bị khóa khi `APP_ENV=production`.
+
 Sau khi chạy `php artisan migrate --seed`, tài khoản quản trị phát triển mặc định là `admin` / `password`. Hãy đổi mật khẩu trước khi đưa lên môi trường thật.
 
 ## API quản trị

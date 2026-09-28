@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CommonController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\DemoAuthController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;   
@@ -11,6 +12,7 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 Route::post('/login', [UserController::class, 'login']);
+Route::post('/demo/login', [DemoAuthController::class, 'login']);
 Route::post('/register', [UserController::class, 'register']);
 Route::post('/logout', [UserController::class, 'logout'])->middleware('auth:sanctum');
 Route::post('/admin/login', [AdminController::class, 'login']);
