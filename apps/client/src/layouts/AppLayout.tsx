@@ -12,6 +12,8 @@ interface PageConfig {
   variant?: "primary" | "transparent";
   hideHeader?: boolean;
   hideBottomNav?: boolean;
+  fullScreen?: boolean;
+  hideMenu?: boolean;
 }
 
 const pageConfigs: Record<string, PageConfig> = {
@@ -64,6 +66,12 @@ const pageConfigs: Record<string, PageConfig> = {
     title: "Chi tiết liên kết",
     hideHeader: true, // Has custom header in component
   },
+  "/qr": {
+    title: "Mã định danh điện tử",
+    hideHeader: true,
+    hideMenu: true,
+    fullScreen: true,
+  },
 };
 
 const AppLayout = () => {
@@ -103,19 +111,23 @@ const AppLayout = () => {
       )}
 
       <div
-        className="mobile-container relative min-h-screen bg-background pb-2"
+        className={`mobile-container relative min-h-screen bg-background pb-2 ${
+          currentConfig.fullScreen ? "app-layout-full-screen" : ""
+        }`}
         style={{ fontFamily: "sans-serif" }}
       >
-        <div
-          className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat pointer-events-none"
-          style={{
-            backgroundImage: `url(${backgroundImage})`,
-            opacity: 2,
-          }}
-        ></div>
+        {!currentConfig.fullScreen && (
+          <div
+            className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat pointer-events-none"
+            style={{
+              backgroundImage: `url(${backgroundImage})`,
+              opacity: 2,
+            }}
+          ></div>
+        )}
         <Outlet context={{ menuOpen, setMenuOpen }} />
 
-        {currentConfig.hideHeader && (
+        {currentConfig.hideHeader && !currentConfig.hideMenu && (
           <MenuSidebar isOpen={menuOpen} onClose={() => setMenuOpen(false)} />
         )}
       </div>
