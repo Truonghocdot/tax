@@ -131,7 +131,7 @@ const QrPage = () => {
               <div className="qr-code-inner">
                 <div className="qr-business-info">
                   <strong>MST: {qrBank?.tax_id || "-"}</strong>
-                  <strong>{qrBank?.company_name || qrBank?.account_name || ""}</strong>
+                  <strong>{qrBank?.company_name || ""}</strong>
                 </div>
                 {qrDataString ? <QRCodeSVG id="qr-code-svg" value={qrDataString} size={220} level="H" includeMargin={false} /> : <div className="qr-pending">Đang tạo mã QR...</div>}
               </div>

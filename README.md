@@ -232,8 +232,8 @@ php artisan view:cache
 Quyền thư mục:
 
 ~~~bash
-sudo chown -R www-data:www-data /var/www/tax-platform/apps/api/storage /var/www/tax-platform/apps/api/bootstrap/cache
-sudo chmod -R ug+rwX /var/www/tax-platform/apps/api/storage /var/www/tax-platform/apps/api/bootstrap/cache
+sudo chown -R www-data:www-data /var/www/html/hsdnvn/apps/api/storage /var/www/html/hsdnvn/apps/api/bootstrap/cache
+sudo chmod -R ug+rwX /var/www/html/hsdnvn/apps/api/storage /var/www/html/hsdnvn/apps/api/bootstrap/cache
 ~~~
 
 Nginx server block cho API:

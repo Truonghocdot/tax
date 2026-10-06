@@ -74,6 +74,13 @@ export default function QrDialog({
               onChange={(event) => update("tax_id")(event.target.value)}
             />
           </label>
+          <label>
+            Tên công ty
+            <input
+              value={form.company_name}
+              onChange={(event) => update("company_name")(event.target.value)}
+            />
+          </label>
           <label className="wide">
             Mô tả / nội dung chuyển khoản
             <input
