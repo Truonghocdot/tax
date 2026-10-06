@@ -21,6 +21,9 @@ class UserController extends Controller
      */
     public function register(Request $request): JsonResponse
     {
+        $requestId = $request->attributes->get('request_id');
+        Log::info('client.register.started', ['request_id' => $requestId]);
+
         try {
             $validator = Validator::make(
                 $request->all(),
@@ -41,12 +44,17 @@ class UserController extends Controller
             );
 
             if ($validator->fails()) {
+                Log::warning('client.register.validation_failed', [
+                    'request_id' => $requestId,
+                    'errors' => $validator->errors()->toArray(),
+                ]);
+
                 return response()->json([
                     'status' => false,
                     'message' => $validator->errors()->first(),
                 ], 422);
             }
-            $data = $request->all();
+            $data = $validator->validated();
             $user = User::create([
                 'phone' => $data['phone'],
                 'password' => Hash::make($data['password']),
@@ -55,13 +63,21 @@ class UserController extends Controller
                 'is_active' => false,
             ]);
 
+            Log::info('client.register.succeeded', [
+                'request_id' => $requestId,
+                'user_id' => $user->id,
+            ]);
+
             return response()->json([
                 'status' => true,
                 'message' => 'Đăng ký thành công. Tài khoản đang chờ quản trị viên duyệt.',
                 'data' => $user,
             ], 200);
         } catch (\Throwable $th) {
-            Log::error($th->getMessage(), $th->getTrace());
+            Log::error('client.register.failed', [
+                'request_id' => $requestId,
+                'exception' => $th,
+            ]);
 
             return response()->json([
                 'status' => false,
@@ -124,7 +140,7 @@ class UserController extends Controller
                 ],
             ], 200);
         } catch (\Throwable $th) {
-            Log::error($th->getMessage(), $th->getTrace());
+            $this->logFailure($request, $th);
 
             return response()->json([
                 'status' => false,
@@ -191,7 +207,7 @@ class UserController extends Controller
                 'data' => $user,
             ], 200);
         } catch (\Throwable $th) {
-            Log::error($th->getMessage(), $th->getTrace());
+            $this->logFailure($request, $th);
 
             return response()->json([
                 'status' => false,
@@ -270,7 +286,7 @@ class UserController extends Controller
                 'data' => $userBank,
             ], 200);
         } catch (\Throwable $th) {
-            Log::error($th->getMessage(), $th->getTrace());
+            $this->logFailure($request, $th);
 
             return response()->json([
                 'status' => false,
@@ -350,11 +366,11 @@ class UserController extends Controller
                 'data' => $user,
             ], 200);
         } catch (\Throwable $th) {
-            Log::error($th->getMessage(), $th->getTrace());
+            $this->logFailure($request, $th);
 
             return response()->json([
                 'status' => false,
-                'message' => 'Định danh thất bại, có lỗi xảy ra ở máy chủ: '.$th->getMessage(),
+                'message' => 'Định danh thất bại, có lỗi xảy ra ở máy chủ',
             ], 500);
         }
     }
@@ -371,11 +387,11 @@ class UserController extends Controller
                 'data' => $userBanks,
             ], 200);
         } catch (\Throwable $th) {
-            Log::error($th->getMessage(), $th->getTrace());
+            $this->logFailure($request, $th);
 
             return response()->json([
                 'status' => false,
-                'message' => 'Lấy danh sách ngân hàng thất bại, có lỗi xảy ra ở máy chủ: '.$th->getMessage(),
+                'message' => 'Lấy danh sách ngân hàng thất bại, có lỗi xảy ra ở máy chủ',
             ], 500);
         }
     }
@@ -392,11 +408,11 @@ class UserController extends Controller
                 'data' => $qrBank,
             ], 200);
         } catch (\Throwable $th) {
-            Log::error($th->getMessage(), $th->getTrace());
+            $this->logFailure($request, $th);
 
             return response()->json([
                 'status' => false,
-                'message' => 'Lấy danh sách ngân hàng thất bại, có lỗi xảy ra ở máy chủ: '.$th->getMessage(),
+                'message' => 'Lấy danh sách ngân hàng thất bại, có lỗi xảy ra ở máy chủ',
             ], 500);
         }
     }
@@ -411,12 +427,23 @@ class UserController extends Controller
                 'message' => 'Đăng xuất thành công',
             ], 200);
         } catch (\Throwable $th) {
-            Log::error($th->getMessage(), $th->getTrace());
+            $this->logFailure($request, $th);
 
             return response()->json([
                 'status' => false,
-                'message' => 'Đăng xuất thất bại, có lỗi xảy ra ở máy chủ: '.$th->getMessage(),
+                'message' => 'Đăng xuất thất bại, có lỗi xảy ra ở máy chủ',
             ], 500);
         }
+    }
+
+    private function logFailure(Request $request, \Throwable $exception): void
+    {
+        Log::error('client_api.controller_exception', [
+            'request_id' => $request->attributes->get('request_id'),
+            'path' => $request->path(),
+            'method' => $request->method(),
+            'user_id' => $request->user()?->getAuthIdentifier(),
+            'exception' => $exception,
+        ]);
     }
 }

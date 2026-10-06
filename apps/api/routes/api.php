@@ -1,22 +1,23 @@
 <?php
 
-use App\Http\Controllers\CommonController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\CommonController;
 use App\Http\Controllers\DemoAuthController;
 use App\Http\Controllers\UserController;
+use App\Http\Resources\UserResource;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;   
+use Illuminate\Support\Facades\Route;
+
+Route::post('/admin/login', [AdminController::class, 'login']);
 
 Route::get('/user', function (Request $request) {
-    return new \App\Http\Resources\UserResource($request->user());
+    return new UserResource($request->user());
 })->middleware('auth:sanctum');
 
 Route::post('/login', [UserController::class, 'login']);
 Route::post('/demo/login', [DemoAuthController::class, 'login']);
 Route::post('/register', [UserController::class, 'register']);
 Route::post('/logout', [UserController::class, 'logout'])->middleware('auth:sanctum');
-Route::post('/admin/login', [AdminController::class, 'login']);
-
 Route::get('banks', [CommonController::class, 'banks']);
 
 Route::post('/identity-verification', [UserController::class, 'identityVerification'])->middleware('auth:sanctum');
